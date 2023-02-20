@@ -57,7 +57,9 @@ public class NamesrvStartup {
 
     public static NamesrvController main0(String[] args) {
         try {
+            //解析命令行和配置文件
             parseCommandlineAndConfigFile(args);
+            //创建一个NameServController(核心)
             NamesrvController controller = createAndStartNamesrvController();
             return controller;
         } catch (Throwable e) {
@@ -81,8 +83,11 @@ public class NamesrvStartup {
     }
 
     public static void parseCommandlineAndConfigFile(String[] args) throws Exception {
+        //设置版本信息
         System.setProperty(RemotingCommand.REMOTING_VERSION_KEY, Integer.toString(MQVersion.CURRENT_VERSION));
 
+        //创建两个option
+        //todo 不太明白option类的作用
         Options options = ServerUtil.buildCommandlineOptions(new Options());
         CommandLine commandLine = ServerUtil.parseCmdLine("mqnamesrv", args, buildCommandlineOptions(options), new DefaultParser());
         if (null == commandLine) {
@@ -93,6 +98,7 @@ public class NamesrvStartup {
         namesrvConfig = new NamesrvConfig();
         nettyServerConfig = new NettyServerConfig();
         nettyClientConfig = new NettyClientConfig();
+        //默认端口
         nettyServerConfig.setListenPort(9876);
         if (commandLine.hasOption('c')) {
             String file = commandLine.getOptionValue('c');
